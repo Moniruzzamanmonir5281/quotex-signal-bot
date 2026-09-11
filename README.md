@@ -138,7 +138,7 @@ MIT লাইসেন্স - বিস্তারিত জন্য `LICENSE
 
 পুল রিকোয়েস্ট এবং ইস্যু স্বাগত জানাই!
 
-## 📞 সাপোর্ট
+## 📞 সাপোর্ট 01618959120
 
 সমস্যার জন্য [ইস্যু খুলুন](https://github.com/Moniruzzamanmonir5281/quotex-signal-bot/issues)
 
