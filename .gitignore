@@ -1,0 +1,53 @@
+# পরিবেশ
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+PIPFILE.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# লগিং
+*.log
+bot.log
+trading_log.csv
+bot_stats.json
+
+# ডেটা
+*.db
+*.sqlite
+*.sqlite3
+
+# অস্থায়ী
+*.tmp
+*.bak
+*.cache
