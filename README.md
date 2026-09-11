@@ -1,4 +1,3 @@
-## Name Color
 - Name: Moniruzzaman Monir
 - Color Code (HEX): #F68534
 - RGB: rgb(246, 133, 52)
