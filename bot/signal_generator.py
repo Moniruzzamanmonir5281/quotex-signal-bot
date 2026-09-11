@@ -6,7 +6,7 @@
 """
 
 import logging
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List
 from enum import Enum
 from .indicators import IndicatorAnalyzer, TechnicalIndicators
 
@@ -31,36 +31,18 @@ class SignalStrength(Enum):
 class SignalGenerator:
     """উন্নত ট্রেডিং সিগনাল জেনারেটর"""
     
-    def __init__(self, 
-                 buy_threshold: float = 0.6,
-                 sell_threshold: float = 0.4,
-                 min_strength: int = 2):
+    def __init__(self, buy_threshold: float = 0.6, sell_threshold: float = 0.4, min_strength: int = 2):
         """
         সিগনাল জেনারেটর ইনিশিয়ালাইজ করুন
-        
-        Args:
-            buy_threshold: ক্রয় সিগনালের জন্য থ্রেশহোল্ড
-            sell_threshold: বিক্রয় সিগনালের জন্য থ্রেশহোল্ড
-            min_strength: সর্বনিম্ন সিগনাল শক্তি
         """
         self.buy_threshold = buy_threshold
         self.sell_threshold = sell_threshold
         self.min_strength = min_strength
         self.signal_history = []
     
-    def generate_signal(self, prices: List[float], 
-                       highs: List[float] = None,
-                       lows: List[float] = None) -> Dict:
+    def generate_signal(self, prices: List[float], highs: List[float] = None, lows: List[float] = None) -> Dict:
         """
         সম্পূর্ণ ট্রেড সিগনাল তৈরি করুন
-        
-        Args:
-            prices: বন্ধনী মূল্যের তালিকা
-            highs: উচ্চ মূল্যের তালিকা (ঐচ্ছিক)
-            lows: নিম্ন মূল্যের তালিকা (ঐচ্ছিক)
-            
-        Returns:
-            সম্পূর্ণ সিগনাল তথ্য
         """
         if not prices or len(prices) < 20:
             return {
@@ -71,10 +53,8 @@ class SignalGenerator:
                 'reasons': ['অপর্যাপ্ত ডেটা']
             }
         
-        # সূচক গণনা করুন
         indicators = IndicatorAnalyzer.get_indicators(prices, highs, lows)
         
-        # বিভিন্ন সূচক থেকে সিগনাল সংগ্রহ করুন
         buy_score = 0
         sell_score = 0
         total_score = 0
@@ -174,108 +154,32 @@ class SignalGenerator:
             'current_price': prices[-1]
         }
         
-        # হিস্টোরিতে যোগ করুন
         self.signal_history.append(signal_data)
-        
         return signal_data
     
     def should_trade(self, signal: Dict) -> bool:
         """
         সিগনালের উপর ভিত্তি করে ট্রেড করা উচিত কিনা তা নির্ধারণ করুন
-        
-        Args:
-            signal: সিগনাল ডেটা
-            
-        Returns:
-            True যদি ট্রেড করা উচিত
         """
         if signal['signal'] == SignalType.NEUTRAL.value:
             return False
-        
         if signal['strength'] < self.min_strength:
             return False
-        
         if signal['confidence'] < 0.5:
             return False
-        
         return True
     
     def get_signal_summary(self) -> Dict:
         """
         সাম্প্রতিক সিগনালের সারসংক্ষেপ পান
-        
-        Returns:
-            সারসংক্ষেপ পরিসংখ্যান
         """
         if not self.signal_history:
-            return {
-                'total_signals': 0,
-                'buy_signals': 0,
-                'sell_signals': 0,
-                'neutral_signals': 0,
-                'avg_confidence': 0.0
-            }
+            return {'total_signals': 0, 'buy_signals': 0, 'sell_signals': 0, 'neutral_signals': 0, 'avg_confidence': 0.0}
         
-        recent = self.signal_history[-100:]  # সাম্প্রতিক ১০০টি সিগনাল
-        
+        recent = self.signal_history[-100:]
         buy_count = sum(1 for s in recent if s['signal'] == SignalType.BUY.value)
         sell_count = sum(1 for s in recent if s['signal'] == SignalType.SELL.value)
         neutral_count = sum(1 for s in recent if s['signal'] == SignalType.NEUTRAL.value)
-        
         avg_confidence = sum(s['confidence'] for s in recent) / len(recent) if recent else 0
         
-        return {
-            'total_signals': len(recent),
-            'buy_signals': buy_count,
-            'sell_signals': sell_count,
-            'neutral_signals': neutral_count,
-            'avg_confidence': round(avg_confidence, 3),
-            'buy_ratio': round(buy_count / len(recent), 3) if recent else 0
-        }
-
-
-class MultiTimeframeSignal:
-    """মাল্টি-টাইমফ্রেম সিগনাল বিশ্লেষণ"""
-    
-    def __init__(self):
-        """মাল্টি-টাইমফ্রেম বিশ্লেষক ইনিশিয়ালাইজ করুন"""
-        self.generators = {
-            '1m': SignalGenerator(),
-            '5m': SignalGenerator(),
-            '15m': SignalGenerator(),
-            '1h': SignalGenerator()
-        }
-    
-    def analyze(self, prices_dict: Dict[str, List[float]]) -> Dict:
-        """
-        বিভিন্ন টাইমফ্রেম বিশ্লেষণ করুন
-        
-        Args:
-            prices_dict: {'1m': [...], '5m': [...], ...}
-            
-        Returns:
-            মাল্টি-টাইমফ্রেম সিগনাল
-        """
-        signals = {}
-        
-        for timeframe, generator in self.generators.items():
-            if timeframe in prices_dict:
-                signals[timeframe] = generator.generate_signal(prices_dict[timeframe])
-        
-        # সমন্বিত সিগনাল
-        buy_count = sum(1 for s in signals.values() if s['signal'] == SignalType.BUY.value)
-        sell_count = sum(1 for s in signals.values() if s['signal'] == SignalType.SELL.value)
-        
-        if buy_count >= 2:
-            consensus = SignalType.BUY.value
-        elif sell_count >= 2:
-            consensus = SignalType.SELL.value
-        else:
-            consensus = SignalType.NEUTRAL.value
-        
-        return {
-            'timeframe_signals': signals,
-            'consensus': consensus,
-            'agreement_count': max(buy_count, sell_count),
-            'total_timeframes': len(signals)
-        }
+        return {'total_signals': len(recent), 'buy_signals': buy_count, 'sell_signals': sell_count, 'neutral_signals': neutral_count, 'avg_confidence': round(avg_confidence, 3), 'buy_ratio': round(buy_count / len(recent), 3) if recent else 0}
