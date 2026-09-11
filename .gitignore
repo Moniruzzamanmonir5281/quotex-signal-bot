@@ -1,9 +1,11 @@
-# পরিবেশ
+# .gitignore - Git এ আপলোড করবেন না এমন ফাইলগুলি
+
+# পরিবেশ ভেরিয়েবল
 .env
 .env.local
 .env.*.local
 
-# Python
+# পাইথন
 __pycache__/
 *.py[cod]
 *$py.class
@@ -28,6 +30,13 @@ share/python-wheels/
 *.egg
 PIPFILE.lock
 
+# ভার্চুয়াল পরিবেশ
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
 # IDE
 .vscode/
 .idea/
@@ -36,18 +45,31 @@ PIPFILE.lock
 *~
 .DS_Store
 
-# লগিং
+# লগ ফাইলগুলি
 *.log
 bot.log
+trading.log
+
+# ডেটা ফাইলগুলি
+*.csv
 trading_log.csv
 bot_stats.json
 
-# ডেটা
-*.db
-*.sqlite
-*.sqlite3
+# ক্যাশ
+.cache/
+.pytest_cache/
 
-# অস্থায়ী
+# অস্থায়ী ফাইলগুলি
 *.tmp
+*.temp
 *.bak
-*.cache
+
+# সংবেদনশীল তথ্য
+*.key
+*.pem
+*.p12
+secrets.json
+
+# অপারেটিং সিস্টেম
+Thumbs.db
+.DS_Store
