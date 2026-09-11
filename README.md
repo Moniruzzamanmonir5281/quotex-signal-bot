@@ -1,13 +1,7 @@
-# Moniruzzaman Monir
-
-## Name Colors (Zigzag Palette)
-- `#F68534` — Orange
-- `#AE6273` — Muted Rose
-- `#448914` — Forest Green
-- `#83CE27` — Lime Green
-- `#8D8532` — Olive
-- `#9AE273` — Light Green
-- `#7A2180` — Purple
+## Name Color
+- Name: Moniruzzaman Monir
+- Color Code (HEX): #F68534
+- RGB: rgb(246, 133, 52)
 # 🤖 Quotex Signal Bot
 
 Quotex ট্রেডিং প্ল্যাটফর্মের জন্য উন্নত সিগনাল এবং স্বয়ংক্রিয় ট্রেডিং বট।
